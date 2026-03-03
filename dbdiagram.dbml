@@ -1,0 +1,140 @@
+// Database Schema for Laravel Project (UUID Based)
+
+Table users {
+  id uuid [primary key]
+  name varchar
+  email varchar [unique]
+  email_verified_at timestamp [null]
+  password varchar
+  role enum('COMPANY', 'TALENT', 'ADMIN')
+  remember_token varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table password_reset_tokens {
+  email varchar [primary key]
+  token varchar
+  created_at timestamp [null]
+}
+
+Table user_profile {
+  id uuid [primary key]
+  user_id uuid [unique, note: 'One-to-one with users']
+  location varchar [null]
+  full_address varchar [null]
+  about_me varchar [null]
+  phone varchar [null]
+  photo varchar [null]
+  cv varchar [null]
+  portfolio varchar [null]
+  birth_date date [null]
+  experience_year unsigned_integer [null]
+  availability_for_work boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table company_profile {
+  id uuid [primary key]
+  company_id uuid [unique, note: 'One-to-one with users (Role COMPANY)']
+  address varchar [null]
+  location varchar [null]
+  about_company text [null]
+  company_size unsigned_integer [null]
+  founded_in date [null]
+  photo varchar [null]
+  website_url varchar [null]
+  facebook_url varchar [null]
+  instagram_url varchar [null]
+  twitter_url varchar [null]
+  linked_in_url varchar [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table posts {
+  id uuid [primary key]
+  company_id uuid
+  post_title varchar
+  location varchar
+  overview longtext
+  responsibilities longtext
+  requirements longtext
+  skills longtext
+  experience_year unsigned_integer
+  employment_type enum('work_from_home', 'full_time', 'remote', 'contract')
+  level_type enum('junior', 'middle', 'senior', 'head')
+  salary varchar
+  total_applied integer [default: 0]
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'Job postings created by companies'
+}
+
+Table post_applies {
+  id bigint [primary key, increment]
+  post_id uuid
+  user_id uuid
+  status enum('PENDING', 'ON_REVIEW', 'ACCEPTED', 'REJECTED') [default: 'PENDING']
+  created_at timestamp
+  updated_at timestamp
+
+  indexes {
+    (user_id, post_id) [unique]
+  }
+}
+
+Table personal_access_tokens {
+  id bigint [primary key, increment]
+  tokenable_type varchar
+  tokenable_id uuid
+  name text
+  token varchar(64) [unique]
+  abilities text [null]
+  last_used_at timestamp [null]
+  expires_at timestamp [null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table queue_jobs {
+  id bigint [primary key, increment]
+  queue varchar
+  payload longtext
+  attempts unsigned_tinyint
+  reserved_at unsigned_integer [null]
+  available_at unsigned_integer
+  created_at unsigned_integer
+}
+
+Table queue_job_batches {
+  id varchar [primary key]
+  name varchar
+  total_jobs integer
+  pending_jobs integer
+  failed_jobs integer
+  failed_job_ids longtext
+  options mediumtext [null]
+  cancelled_at integer [null]
+  created_at integer
+  finished_at integer [null]
+}
+
+Table queue_failed_jobs {
+  id bigint [primary key, increment]
+  uuid varchar [unique]
+  connection text
+  queue text
+  payload longtext
+  exception longtext
+  failed_at timestamp [default: `now()`]
+}
+
+// Relationships
+Ref: "users"."id" < "user_profile"."user_id" [delete: cascade]
+Ref: "users"."id" < "company_profile"."company_id" [delete: cascade]
+Ref: "users"."id" < "posts"."company_id" [delete: cascade]
+Ref: "posts"."id" < "post_applies"."post_id" [delete: cascade]
+Ref: "users"."id" < "post_applies"."user_id" [delete: cascade]
