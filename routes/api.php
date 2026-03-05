@@ -38,4 +38,4 @@ Route::post('/auth/forgot-password/reset-password', [ForgotPasswordController::c
 // list posts without any middleware
 Route::get('/posts', [ListPostController::class, 'index']);
 
-Route::get('/posts/{id}', [ListPostController::class, 'show'])->whereUuid('id')->middleware('auth:sanctum', 'token.expired');
+Route::get('/posts/{id}', [ListPostController::class, 'show'])->whereUlid('id')->middleware('auth:sanctum', 'token.expired');

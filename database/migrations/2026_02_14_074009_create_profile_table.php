@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_profile', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->unique()->constrained('users')->onDelete('cascade');
+            $table->ulid('id')->primary();
+            $table->foreignUlid('user_id')->unique()->constrained('users')->onDelete('cascade');
             $table->string('location')->nullable();
             $table->string('full_address')->nullable();
             $table->string('about_me')->nullable();
@@ -27,12 +27,11 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('user_id');
-            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
         Schema::create('company_profile', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('company_id')->unique()->constrained('users')->onDelete('cascade');
+            $table->ulid('id')->primary();
+            $table->foreignUlid('company_id')->unique()->constrained('users')->onDelete('cascade');
             $table->string('address')->nullable();
             $table->string('location')->nullable();
             $table->text('about_company')->nullable();
@@ -47,7 +46,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('company_id');
-            // $table->foreign('company_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

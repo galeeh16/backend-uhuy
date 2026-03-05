@@ -17,12 +17,12 @@ class CompanyProfileFactory extends Factory
             'about_company' => $this->faker->paragraph,
             'company_size' => $this->faker->numberBetween(5, 1000),
             'founded_in' => $this->faker->date(),
-            'photo' => 'company/logo.png',
-            'website_url' => $this->faker->url,
-            'facebook_url' => $this->faker->url,
-            'instagram_url' => $this->faker->url,
-            'twitter_url' => $this->faker->url,
-            'linked_in_url' => $this->faker->url,
+            // 'photo' => 'company/logo.png',
+            // 'website_url' => $this->faker->url,
+            // 'facebook_url' => $this->faker->url,
+            // 'instagram_url' => $this->faker->url,
+            // 'twitter_url' => $this->faker->url,
+            // 'linked_in_url' => $this->faker->url,
         ];
     }
 }

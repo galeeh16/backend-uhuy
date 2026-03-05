@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
 class UserProfile extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUlids;
 
     protected $table = 'user_profile';
 
@@ -21,6 +22,11 @@ class UserProfile extends Model
 
     public function newUniqueId(): string
     {
-        return (string) Str::uuid();
+        return (string) Str::ulid();
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

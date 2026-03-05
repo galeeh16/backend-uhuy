@@ -5,51 +5,31 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Post;
 use App\Models\User;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PostApplySeeder extends Seeder
 {
     public function run()
     {
-        $posts = Post::pluck('id');
-        $talents = User::where('role', 'TALENT')->pluck('id');
+        // 1. Ambil semua Talent (User dengan role TALENT)
+        $talents = User::where('role', 'TALENT')->get();
+        
+        // 2. Ambil semua Lowongan (Post)
+        $posts = Post::take(5)->get();
 
-        if ($posts->isEmpty() || $talents->isEmpty()) {
-            $this->command->warn('PostApplySeeder skipped: post or talent empty');
-            return;
-        }
+        // 3. Loop melalui setiap Post dan berikan beberapa pelamar acak
+        foreach ($posts as $post) {
+            // Ambil 2-5 talent secara acak untuk melamar di post ini
+            $randomTalents = $talents->random(rand(1,2));
 
-        foreach ($posts as $postId) {
-            // jumlah pelamar per post
-            $applyCount = rand(1, min(10, $talents->count()));
-
-            $applicants = $talents->random($applyCount);
-
-            foreach ($applicants as $userId) {
-                DB::table('post_applies')->updateOrInsert(
-                    [
-                        'post_id' => $postId,
-                        'user_id' => $userId,
-                    ],
-                    [
-                        'status' => collect([
-                            'PENDING',
-                            'ON_REVIEW',
-                            'ACCEPTED',
-                            'REJECTED',
-                        ])->random(),
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]
-                );
-            }
-
-            // update counter cache
-            DB::table('posts')
-                ->where('id', $postId)
-                ->update([
-                    'total_applied' => $applyCount,
+            foreach ($randomTalents as $talent) {
+                $post->applicants()->attach($talent->id, [
+                    'id' => (string) Str::ulid(), // Tambahkan ini agar ID primary key terisi
+                    'status' => fake()->randomElement(['PENDING', 'ON_REVIEW', 'ACCEPTED', 'REJECTED']),
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
+            }
         }
     }
 }

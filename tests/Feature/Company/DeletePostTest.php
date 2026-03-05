@@ -26,7 +26,7 @@ class DeletePostTest extends TestCase
     {
         $loginTalent = $this->login([
             'email' => 'galih@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $json = $loginTalent->json();
@@ -46,7 +46,7 @@ class DeletePostTest extends TestCase
     {
         $loginCompany = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $json = $loginCompany->json();
@@ -68,7 +68,7 @@ class DeletePostTest extends TestCase
     {
         $loginCompany = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $json = $loginCompany->json();
@@ -89,7 +89,7 @@ class DeletePostTest extends TestCase
     {
         $loginCompany = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
         
         $json = $loginCompany->json();

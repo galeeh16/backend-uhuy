@@ -23,5 +23,5 @@ Route::middleware(['auth:sanctum', 'token.expired', 'role:COMPANY'])
     // list all candidates who apply post
     Route::get('/candidates', [CandidateController::class, 'list'])->middleware('abilities:post:view');
     // view candidate who apply post by id
-    Route::get('/candidates/{candidateId}', [CandidateController::class, 'show'])->middleware('abilities:post:view');
+    Route::get('/candidates/{postApplyId}', [CandidateController::class, 'show'])->middleware('abilities:post:view');
 });

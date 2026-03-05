@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Post;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\DB;
 use Tests\Concerns\LoginTrait;
 use Tests\TestCase;
 
@@ -44,7 +44,8 @@ class PostTest extends TestCase
 
     public function test_post_by_id_not_login(): void 
     {
-        $postId = DB::table('posts')->first()->id;
+        $postId = Post::first()->id;
+        
         $response = $this->getJson('/api/posts/' . $postId);
         $response
             ->assertStatus(401)
@@ -55,12 +56,12 @@ class PostTest extends TestCase
     {
         $loginTalent = $this->login([
             'email' => 'galih@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $json = $loginTalent->json();
 
-        $postId = DB::table('posts')->first()->id;
+        $postId = Post::first()->id;
 
         $response = $this->getJson('/api/posts/' . $postId, [
             'Authorization' => 'Bearer ' . $json['token'],

@@ -21,7 +21,7 @@ class ListPostTest extends TestCase
     {
         $loginCompany = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $loginCompany

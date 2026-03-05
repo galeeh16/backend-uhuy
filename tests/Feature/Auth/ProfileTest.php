@@ -21,7 +21,7 @@ class ProfileTest extends TestCase
     {
         $loginTalent = $this->login([
             'email' => 'galih@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
         $loginTalent
             ->assertStatus(200)
@@ -63,7 +63,7 @@ class ProfileTest extends TestCase
     {
         $loginCompany = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
         $loginCompany
             ->assertStatus(200)

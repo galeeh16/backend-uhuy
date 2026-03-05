@@ -64,7 +64,7 @@ class LoginTest extends TestCase
     {
        $this->login([
             'email' => 'galih@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ])
         ->assertStatus(200)
         ->assertJsonStructure([

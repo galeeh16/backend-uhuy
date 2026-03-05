@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PostApplyService
 {
@@ -25,6 +26,7 @@ class PostApplyService
 
         try {
             $user->appliedPosts()->attach($post->id, [
+                'id' => (string) Str::ulid(), // WAJIB: Karena Primary Key post_applies adalah ULID
                 'status' => 'PENDING',
             ]);
 
@@ -140,13 +142,13 @@ class PostApplyService
             ->paginate(perPage: $perPage, page: $page);
     }
 
-    public function findPostApplyByID(User $company, int $candidateId)
+    public function findPostApplyByID(User $company, string $postApplyId)
     {
         return PostApply::with([
             'user.userProfile', 
             'post'
         ])
-        ->where('id', $candidateId)
+        ->where('id', $postApplyId)
         // Opsional: Pastikan hanya company pemilik post yang bisa melihat
         ->whereHas('post', function($q) use ($company) {
             $q->where('company_id', $company->id);

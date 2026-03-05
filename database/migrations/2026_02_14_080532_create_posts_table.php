@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('posts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-            $table->foreignUuid('company_id')->constrained('users')->onDelete('cascade');
+            $table->ulid('id')->primary();
+            $table->foreignUlid('company_id')->constrained('users')->onDelete('cascade');
             $table->string('post_title');
             $table->string('location');
             $table->longText('overview');
@@ -35,9 +35,9 @@ return new class extends Migration
 
 
         Schema::create('post_applies', function (Blueprint $table) {
-            $table->id();
-            $table->foreignUuid('post_id')->constrained('posts')->onDelete('cascade');
-            $table->foreignUuid('user_id')->constrained('users')->onDelete('cascade');
+            $table->ulid('id')->primary();
+            $table->foreignUlid('post_id')->constrained('posts')->onDelete('cascade');
+            $table->foreignUlid('user_id')->constrained('users')->onDelete('cascade');
 
             $table->enum('status', ['PENDING', 'ON_REVIEW', 'ACCEPTED', 'REJECTED'])->default('PENDING');
 

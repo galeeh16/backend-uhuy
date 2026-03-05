@@ -25,7 +25,7 @@ class CandidateTest extends TestCase
         // login as talent
         $companyLogin = $this->login([
             'email' => 'galih@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $json = $companyLogin->json();
@@ -44,7 +44,7 @@ class CandidateTest extends TestCase
         // login as company
         $companyLogin = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $json = $companyLogin->json();
@@ -93,12 +93,14 @@ class CandidateTest extends TestCase
         // login as company kopnus
         $companyLogin = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $json = $companyLogin->json();
 
-        $response = $this->getJson('/api/company/candidates/60', [
+        $postApplyId = PostApply::first()->id;
+
+        $response = $this->getJson('/api/company/candidates/' . $postApplyId, [
             'Authorization' => 'Bearer ' . $json['token'],
         ]);
 

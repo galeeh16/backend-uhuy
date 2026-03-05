@@ -23,7 +23,7 @@ class ShowPostTest extends TestCase
     {
         $loginTalent = $this->login([
             'email' => 'galih@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $loginTalent
@@ -48,7 +48,7 @@ class ShowPostTest extends TestCase
     {
         $loginCompany = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $loginCompany
@@ -74,7 +74,7 @@ class ShowPostTest extends TestCase
     {
         $loginCompany = $this->login([
             'email' => 'kopnus@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
 
         $loginCompany

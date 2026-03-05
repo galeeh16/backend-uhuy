@@ -37,12 +37,12 @@ final class CandidateController extends Controller
         ], 200);
     }
 
-    public function show(Request $request, $candidateId): JsonResponse
+    public function show(Request $request, $postApplyId): JsonResponse
     {
         /** @var \App\Models\User $user */
         $user = $request->user();
 
-        $candidate = $this->postApplyService->findPostApplyByID($user, (int) $candidateId);
+        $candidate = $this->postApplyService->findPostApplyByID($user, $postApplyId);
 
         return response()->json([
             'message' => 'Success',

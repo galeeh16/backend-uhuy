@@ -7,7 +7,7 @@ use App\Models\Post;
 use App\Models\UserProfile;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,7 +19,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuids;
+    use HasApiTokens, HasFactory, Notifiable, HasUlids;
 
     protected $guarded = ['id'];
 
@@ -42,7 +42,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function newUniqueId(): string
     {
-        return (string) Str::uuid();
+        return (string) Str::ulid();
     }
 
     public function userProfile(): HasOne

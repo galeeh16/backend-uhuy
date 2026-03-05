@@ -24,7 +24,7 @@ class LogoutTest extends TestCase
     {
         $login = $this->login([
             'email' => 'galih@example.com',
-            'password' => 'Secret12345'
+            'password' => 'Secret123!'
         ]);
         $login
             ->assertStatus(200)

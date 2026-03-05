@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PostApply extends Model
 {
     protected $table = 'post_applies';
+
+    protected $primaryKey = 'id';
+
+    protected $keyType = 'string';
+    
     protected $guarded = ['id'];
 
     public function user(): BelongsTo

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Str;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,9 +12,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Post extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUlids;
     
     protected $table = 'posts';
+
+    protected $primaryKey = 'id';
 
     protected $keyType = 'string';
 
@@ -24,7 +26,7 @@ class Post extends Model
 
     public function newUniqueId(): string
     {
-        return (string) Str::uuid();
+        return (string) Str::ulid();
     }
 
     public function company(): BelongsTo
