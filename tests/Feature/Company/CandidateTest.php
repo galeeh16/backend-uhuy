@@ -12,7 +12,7 @@ class CandidateTest extends TestCase
 {
     use DatabaseTransactions, LoginTrait;
 
-    public function test_list_candidate_but_not_login(): void
+    public function test_list_candidate_but_not_authenticated(): void
     {
         $response = $this->getJson('/api/company/candidates');
 

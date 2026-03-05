@@ -12,7 +12,7 @@ class LogoutTest extends TestCase
 {
     use DatabaseTransactions, LoginTrait;
 
-    public function test_logout_without_login(): void 
+    public function test_logout_but_not_authenticated(): void 
     {
         $response = $this->postJson('/api/auth/logout');
         $response

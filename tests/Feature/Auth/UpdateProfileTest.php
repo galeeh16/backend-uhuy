@@ -11,7 +11,7 @@ class UpdateProfileTest extends TestCase
 {
     use DatabaseTransactions, LoginTrait;
 
-    public function test_update_profile_without_login(): void
+    public function test_update_profile_but_not_authenticated(): void
     {
         $response = $this->putJson('/api/auth/profile/update', []);
 

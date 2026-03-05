@@ -10,7 +10,7 @@ class ProfileTest extends TestCase
 {
     use DatabaseTransactions, LoginTrait;
 
-    public function test_get_user_profile_without_login(): void 
+    public function test_get_user_profile_but_not_authenticated(): void 
     {
         $response = $this->getJson('/api/auth/me', []);
         $response->assertStatus(401)

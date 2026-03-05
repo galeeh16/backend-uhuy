@@ -42,7 +42,7 @@ class PostTest extends TestCase
             ]);
     }
 
-    public function test_post_by_id_not_login(): void 
+    public function test_post_by_id_but_not_authenticated(): void 
     {
         $postId = Post::first()->id;
         

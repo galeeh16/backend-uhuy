@@ -12,7 +12,7 @@ class ApplyPostTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_user_apply_without_login(): void 
+    public function test_user_apply_but_not_authenticated(): void 
     {
         $postId = Post::first()->id;
 

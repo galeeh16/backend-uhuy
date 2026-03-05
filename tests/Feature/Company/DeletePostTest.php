@@ -12,7 +12,7 @@ class DeletePostTest extends TestCase
 {
     use DatabaseTransactions, LoginTrait;
 
-    public function test_company_delete_post_without_login(): void
+    public function test_company_delete_post_but_not_authenticated(): void
     {
         $postId = DB::table('posts')->first()->id;
 

@@ -10,7 +10,7 @@ class CreatePostTest extends TestCase
 {
     use DatabaseTransactions, LoginTrait;
 
-    public function test_company_create_post_without_login(): void
+    public function test_company_create_post_but_not_authenticated(): void
     {
         $response = $this->postJson('/api/company/posts');
 

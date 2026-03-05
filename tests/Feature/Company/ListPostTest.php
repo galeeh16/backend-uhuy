@@ -10,7 +10,7 @@ class ListPostTest extends TestCase
 {
     use DatabaseTransactions, LoginTrait;
 
-    public function test_get_list_but_not_login(): void
+    public function test_get_list_but_not_authenticated(): void
     {
         $response = $this->getJson('/api/company/posts');
 
@@ -35,7 +35,8 @@ class ListPostTest extends TestCase
             'Authorization' => 'Bearer ' . $companyToken
         ]);
 
-        $response->assertStatus(200)
+        $response
+            ->assertStatus(200)
             ->assertJsonStructure([
                 'message',
                 'data' => [
