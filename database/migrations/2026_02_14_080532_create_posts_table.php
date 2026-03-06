@@ -29,7 +29,7 @@ return new class extends Migration
 
             // $table->foreign('company_id')->on('users')->references('id')->onDelete('cascade');
 
-            $table->index('company_id');
+            // $table->index('company_id');
             $table->index('post_title');
         });
 

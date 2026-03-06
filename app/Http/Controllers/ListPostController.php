@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -20,8 +20,8 @@ class ListPostController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $page = $request->page ? (int) $request->page : 1;
-        $perPage = $request->per_page ? (int) $request->per_page : 10;
+        $page = $request->query('page') ? (int) $request->query('page') : 1;
+        $perPage = $request->query('per_page') ? (int) $request->query('per_page') : 10;
 
         $posts = $this->postService->listPostTalent($page, $perPage);
 
@@ -36,7 +36,6 @@ class ListPostController extends Controller
      */
     public function show($id): JsonResponse
     {
-        // sleep(2);
         $post = $this->postService->findByIdDetail($id);
 
         return response()->json([

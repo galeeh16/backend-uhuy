@@ -85,6 +85,9 @@ class UserService
             ]);
         }
 
+        // notif ke user untuk verifikasi email
+        $user->sendEmailVerificationNotification();
+
         return $user;
     }
 

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\CompanyProfile;
 use App\Models\Post;
 use App\Models\UserProfile;
+use App\Notifications\RegisterUserNotification;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -70,6 +71,14 @@ class User extends Authenticatable implements MustVerifyEmail
             )
             ->withPivot('status') // Tanpa ini tidak keambil kolom2 lain (misal kolom status)
             ->withTimestamps();
+    }
+
+    /**
+     * Override method default untuk mengirim email verifikasi via Queue.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new RegisterUserNotification());
     }
     
     /**

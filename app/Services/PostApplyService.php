@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Enums\StatusCandidate;
 use App\Exceptions\AlreadyAppliedException;
 use App\Exceptions\ForbiddenException;
 use App\Models\Post;
@@ -27,7 +28,7 @@ class PostApplyService
         try {
             $user->appliedPosts()->attach($post->id, [
                 'id' => (string) Str::ulid(), // WAJIB: Karena Primary Key post_applies adalah ULID
-                'status' => 'PENDING',
+                'status' => StatusCandidate::Pending->value,
             ]);
 
             // optional: update counter

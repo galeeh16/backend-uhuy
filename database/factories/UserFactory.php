@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -20,7 +21,7 @@ class UserFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('Secret123!'),
-            'role' => 'TALENT', // default
+            'role' => UserRole::Talent->value, // default
             'remember_token' => Str::random(10),
         ];
     }
@@ -28,21 +29,21 @@ class UserFactory extends Factory
     public function talent()
     {
         return $this->state(fn () => [
-            'role' => 'TALENT'
+            'role' => UserRole::Talent->value
         ]);
     }
 
     public function company()
     {
         return $this->state(fn () => [
-            'role' => 'COMPANY',
+            'role' => UserRole::Company->value
         ]);
     }
 
     public function admin()
     {
         return $this->state(fn () => [
-            'role' => 'ADMIN',
+            'role' => UserRole::Admin->value
         ]);
     }
 

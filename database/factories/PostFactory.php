@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\EmploymentType;
+use App\Enums\LevelType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -63,8 +65,8 @@ class PostFactory extends Factory
             'requirements' => $requirements,
             'skills' => $skills,
             'experience_year' => $this->faker->numberBetween(1, 10),
-            'employment_type' => $this->faker->randomElement(['full_time', 'work_from_home', 'remote', 'contract']),
-            'level_type' => $this->faker->randomElement(['junior', 'middle', 'senior', 'head']),
+            'employment_type' => $this->faker->randomElement(EmploymentType::cases()),
+            'level_type' => $this->faker->randomElement(LevelType::cases()),
             'salary' => $this->faker->numberBetween(5000000, 50000000), // Range gaji dalam angka
             'created_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'updated_at' => now(),

@@ -18,14 +18,13 @@ final class AppliedPostController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        // sleep(1);
         /** @var \App\Models\User $user */
         $user = $request->user();
-        $page = $request->page ? (int) $request->page : 1;
-        $perPage = $request->per_page ? (int) $request->per_page : 10;
-        $search = $request->search ? $request->search : '';
-        $sortBy = $request->sort_by ? $request->sort_by : '';
-        $sortOrder = $request->sort_order ? strtolower($request->sort_order) : '';
+        $page = $request->query('page') ? (int) $request->query('page') : 1;
+        $perPage = $request->query('per_page') ? (int) $request->query('per_page') : 10;
+        $search = $request->query('search') ? $request->query('search') : '';
+        $sortBy = $request->query('sort_by') ? $request->query('sort_by') : '';
+        $sortOrder = $request->query('sort_order') ? strtolower($request->query('sort_order')) : '';
 
         $posts = $this->service->listAppliedPosts($user, $page, $perPage, $search, $sortBy, $sortOrder);
 

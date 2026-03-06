@@ -26,7 +26,7 @@ return new class extends Migration
             $table->boolean('availability_for_work')->default(true);
             $table->timestamps();
 
-            $table->index('user_id');
+            // $table->index('user_id');
         });
 
         Schema::create('company_profile', function (Blueprint $table) {
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->string('linked_in_url')->nullable();
             $table->timestamps();
 
-            $table->index('company_id');
+            // $table->index('company_id');
         });
     }
 
