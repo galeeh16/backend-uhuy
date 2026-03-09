@@ -29,7 +29,7 @@ return new class extends Migration
 
             // $table->foreign('company_id')->on('users')->references('id')->onDelete('cascade');
 
-            // $table->index('company_id');
+            $table->index('company_id');
             $table->index('post_title');
         });
 
@@ -46,8 +46,8 @@ return new class extends Migration
             // unique: 1 user hanya boleh apply 1x ke 1 post
             $table->unique(['user_id', 'post_id']);
 
-            // $table->foreign('user_id')->on('users')->references('id')->onDelete('cascade');
-
+            $table->index('user_id');
+            $table->index('post_id');
             $table->index('created_at');
         });
     }

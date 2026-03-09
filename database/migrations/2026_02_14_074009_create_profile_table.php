@@ -26,7 +26,7 @@ return new class extends Migration
             $table->boolean('availability_for_work')->default(true);
             $table->timestamps();
 
-            // $table->index('user_id');
+            $table->index('user_id');
         });
 
         Schema::create('company_profile', function (Blueprint $table) {
@@ -45,7 +45,39 @@ return new class extends Migration
             $table->string('linked_in_url')->nullable();
             $table->timestamps();
 
-            // $table->index('company_id');
+            $table->index('company_id');
+        });
+
+        Schema::create('user_educations', function (Blueprint $table) {
+            $table->ulid('id')->primary();
+            $table->foreignUlid('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('degree', ['SMA', 'SMK', 'S1', 'S2', 'S3']); // cth: Sarjana (S1), SMA/SMK
+            $table->string('institution_name'); // cth: Universitas Indonesia
+            $table->string('field_of_study'); // cth: Teknik Informatika, IPA, IPS
+            
+            $table->date('start_at');
+            $table->date('end_at')->nullable(); // Nullable jika masih bersekolah/kuliah
+            
+            $table->string('grade')->nullable(); // cth: IPK 3.80 atau Nilai Akhir
+            $table->text('description')->nullable(); // Untuk mencatat organisasi, pencapaian, dll.
+            
+            $table->timestamps();
+
+            $table->index('user_id');
+        });
+
+        Schema::create('user_work_experiences', function (Blueprint $table) {
+            $table->ulid('id')->primary();
+            $table->foreignUlid('user_id')->constrained('users')->onDelete('cascade');
+            $table->string('company_name');
+            $table->string('position'); // cth: Frontend Developer
+            $table->date('start_at');
+            $table->date('end_at')->nullable();
+            $table->text('description')->nullable();
+
+            $table->timestamps();
+
+            $table->index('user_id');
         });
     }
 
@@ -56,5 +88,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('user_profile');
         Schema::dropIfExists('company_profile');
+        Schema::dropIfExists('user_educations');
+        Schema::dropIfExists('user_work_experiences');
     }
 };

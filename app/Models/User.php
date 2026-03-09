@@ -7,7 +7,9 @@ use App\Models\Post;
 use App\Models\UserProfile;
 use App\Notifications\RegisterUserNotification;
 use App\Notifications\ResetPasswordNotification;
+use App\Observers\UserObserver;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,6 +20,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 
+#[ObservedBy(UserObserver::class)]
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, HasUlids;
@@ -59,6 +62,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'company_id', 'id');
+    }
+
+    public function educations(): HasMany
+    {
+        return $this->hasMany(UserEducation::class, 'user_id', 'id');
+    }
+    
+    public function workExperiences(): HasMany
+    {
+        return $this->hasMany(UserWorkExperience::class, 'user_id', 'id');
     }
 
     public function appliedPosts(): BelongsToMany

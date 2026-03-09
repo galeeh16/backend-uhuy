@@ -164,4 +164,166 @@ class UpdateProfileTest extends TestCase
                 ]
             ]);
     }
+
+    public function test_update_profile_talent_work_experiences_but_not_talent(): void 
+    {
+        $loginCompany = $this->login([
+            'email' => 'kopnus@example.com',
+            'password' => 'Secret123!'
+        ]);
+        $loginCompany
+            ->assertStatus(200)
+            ->assertJsonStructure(['message', 'token']);
+
+        $json = $loginCompany->json();
+
+        $response = $this->putJson('/api/auth/profile/update-work-experiences', [
+            'experiences' => [
+                ['company' => 'Unit test', 'position' => 'Junior Programmer', 'start_at' => '2018-11-01', 'end_at' => '2019-11-01']
+            ]
+        ], [
+            'Authorization' => 'Bearer ' . $json['token']
+        ]);
+
+        $response
+            ->assertStatus(403)
+            ->assertJsonStructure(['message']);
+    }
+
+    public function test_update_profile_talent_work_experiences_but_failed_validation(): void 
+    {
+        $loginTalent = $this->login([
+            'email' => 'galih@example.com',
+            'password' => 'Secret123!'
+        ]);
+        $loginTalent
+            ->assertStatus(200)
+            ->assertJsonStructure(['message', 'token']);
+
+        $json = $loginTalent->json();
+
+        $response = $this->putJson('/api/auth/profile/update-work-experiences', [
+            'experiences' => [
+                ['company' => 'Unit test', 'position' => 'Junior Programmer', 'start_at' => '2018-11-01', 'end_at' => '2019-11-01'],
+                ['company' => 'Unit test'],
+            ]
+        ], [
+            'Authorization' => 'Bearer ' . $json['token']
+        ]);
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure(['message', 'errors']);
+    }
+
+    public function test_update_profile_talent_work_experiences_success(): void 
+    {
+        $loginTalent = $this->login([
+            'email' => 'galih@example.com',
+            'password' => 'Secret123!'
+        ]);
+        $loginTalent
+            ->assertStatus(200)
+            ->assertJsonStructure(['message', 'token']);
+
+        $json = $loginTalent->json();
+
+        $response = $this->putJson('/api/auth/profile/update-work-experiences', [
+            'experiences' => [
+                ['company' => 'Inarts Unit test', 'position' => 'Junior Programmer', 'start_at' => '2018-11-01', 'end_at' => '2019-11-01'],
+                ['company' => 'Kopnus Unit test', 'position' => 'FullStack Programmer', 'start_at' => '2018-11-01'],
+            ]
+        ], [
+            'Authorization' => 'Bearer ' . $json['token']
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['message']);
+    }
+
+    public function test_update_profile_talent_educations_but_not_talent(): void 
+    {
+        $loginCompany = $this->login([
+            'email' => 'kopnus@example.com',
+            'password' => 'Secret123!'
+        ]);
+        $loginCompany
+            ->assertStatus(200)
+            ->assertJsonStructure(['message', 'token']);
+
+        $json = $loginCompany->json();
+
+        $response = $this->putJson('/api/auth/profile/update-educations', [
+            'educations' => [
+                ['degree' => 'SMA', 'institution_name' => 'SMA N 1 Batang Cenaku', 'field_of_study' => 'IPA', 'start_at' => '2018-11-01', 'end_at' => '2019-11-01']
+            ]
+        ], [
+            'Authorization' => 'Bearer ' . $json['token']
+        ]);
+
+        $response
+            ->assertStatus(403)
+            ->assertJsonStructure(['message']);
+    }
+
+    public function test_update_profile_talent_educations_but_failed_validation(): void 
+    {
+        $loginTalent = $this->login([
+            'email' => 'galih@example.com',
+            'password' => 'Secret123!'
+        ]);
+        $loginTalent
+            ->assertStatus(200)
+            ->assertJsonStructure(['message', 'token']);
+
+        $json = $loginTalent->json();
+
+        $response = $this->putJson('/api/auth/profile/update-educations', [
+            'educations' => [
+                ['degree' => 'SMAA', 'institution_name' => 'SMA N 1 Batang Cenaku', 'field_of_study' => 'IPA', 'start_at' => '2018-11-01', 'end_at' => '2019-11-01'],
+                ['degree' => 'SMA'],
+            ]
+        ], [
+            'Authorization' => 'Bearer ' . $json['token']
+        ]);
+
+        $response
+            ->assertStatus(422)
+            ->assertJsonStructure([
+                'message', 
+                'errors' => [
+                    'educations.0.degree',
+                    'educations.1.institution_name',
+                    'educations.1.field_of_study',
+                    'educations.1.start_at',
+                ]
+            ]);
+    }
+
+    public function test_update_profile_talent_educations_success(): void 
+    {
+        $loginTalent = $this->login([
+            'email' => 'galih@example.com',
+            'password' => 'Secret123!'
+        ]);
+        $loginTalent
+            ->assertStatus(200)
+            ->assertJsonStructure(['message', 'token']);
+
+        $json = $loginTalent->json();
+
+        $response = $this->putJson('/api/auth/profile/update-educations', [
+            'educations' => [
+                ['degree' => 'SMA', 'institution_name' => 'SMA N 1 Batang Cenaku', 'field_of_study' => 'IPA', 'start_at' => '2010-03-01', 'end_at' => '2013-03-01'],
+                ['degree' => 'S1', 'institution_name' => 'UPN Veteran Yogyakarta', 'field_of_study' => 'Teknik Informatika', 'start_at' => '2013-09-01', 'end_at' => '2018-03-01'],
+            ]
+        ], [
+            'Authorization' => 'Bearer ' . $json['token']
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonStructure(['message']);
+    }
 }

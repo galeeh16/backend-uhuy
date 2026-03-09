@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Auth\EloquentCachedUserProvider;
 use App\Models\PersonalAccessToken;
 use App\Models\Post;
 use App\Models\User;
@@ -11,7 +12,9 @@ use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Events\QueryExecuted;
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -35,26 +38,43 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $isProduction = app()->isProduction();
+        
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
 
-        $isProduction = app()->isProduction();
+        $this->configureCacheEloquent();
 
-        // if (!$isProduction) {
-        //     DB::listen(function(QueryExecuted $queryExecuted) {
-        //         Log::debug('query executed', [
-        //             'sql' => $queryExecuted->toRawSql(),
-        //             'time' => $queryExecuted->time
-        //         ]);
-        //     });
-        // }
+        if (!$isProduction) {
+            DB::listen(function(QueryExecuted $queryExecuted) {
+                Log::debug('query executed', [
+                    'sql' => $queryExecuted->toRawSql(),
+                    'time' => $queryExecuted->time
+                ]);
+            });
+        }
 
-        Model::preventLazyLoading(!$isProduction);
+        $this->configureModel($isProduction);
 
         $this->configurePolicy();
 
         $this->configureRateLimiting();
 
         $this->configureVerifikasiEmail();
+    }
+
+    private function configureCacheEloquent(): void 
+    {
+        Auth::provider('cachedEloquent', function(Application $application, array $config) {
+            return new EloquentCachedUserProvider(
+                $application['hash'], 
+                $config['model']
+            );
+        });
+    }
+
+    private function configureModel(bool $isProduction): void 
+    {
+        Model::preventLazyLoading(!$isProduction);
     }
 
     private function configurePolicy(): void

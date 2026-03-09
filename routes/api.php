@@ -25,6 +25,10 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::get('/auth/me', [ProfileController::class, 'profile'])->middleware('auth:sanctum', 'token.expired');
 Route::put('/auth/profile/update', [ProfileController::class, 'update'])->middleware('auth:sanctum', 'token.expired');
+Route::put('/auth/profile/update-work-experiences', [ProfileController::class, 'updateWorkExperiences'])->middleware('auth:sanctum', 'token.expired', 'role:TALENT');
+Route::put('/auth/profile/update-educations', [ProfileController::class, 'updateEducations'])->middleware('auth:sanctum', 'token.expired', 'role:TALENT');
+
+
 Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum', 'token.expired');
 
 Route::post('/auth/forgot-password/send-reset-link', [ForgotPasswordController::class, 'sendResetLink'])->middleware('guest');

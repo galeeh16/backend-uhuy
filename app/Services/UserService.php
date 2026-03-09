@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\UserEducation;
+use App\Models\UserWorkExperience;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -332,6 +334,60 @@ class UserService
     public function isExistsEmail(string $email): bool 
     {
         return User::where('email', $email)->exists();
+    }
+
+    public function updateWorkExperiences(User $user, array $experiences): void
+    {
+        $incomingIds = collect($experiences)->pluck('id')->filter();
+        
+        // Tetap hapus yang tidak dikirim dari frontend
+        $user->workExperiences()->whereNotIn('id', $incomingIds)->delete();
+
+        // Siapkan data untuk Upsert
+        $dataToUpsert = [];
+
+        foreach ($experiences as $experience) {
+            $dataToUpsert[] = [
+                'id' => $experience['id'] ?? (string) str()->ulid(),
+                'user_id' => $user->id,
+                'company_name' => $experience['company'],
+                'position' => $experience['position'],
+                'start_at' => $experience['start_at'],
+                'end_at' => $experience['end_at'] ?? null,
+                'description' => $experience['description'] ?? null,
+                'created_at' => now()
+            ];
+        }
+
+        // Lakukan Upsert berdasarkan kolom 'id'
+        // Jika ID cocok, update kolom yang disebutkan di array kedua
+        // UserWorkExperience::upsert($dataToUpsert, ['id'], ['company_name', 'position', 'start_at', 'end_at', 'description']);
+    
+        UserWorkExperience::insert($dataToUpsert);
+    }
+
+    public function updateEducations(User $user, array $educations): void 
+    {
+        // hapus data user educations
+        $user->educations()->delete();
+
+        // tampung data insert
+        $dataInsert = [];
+
+        foreach ($educations as $education) {
+            $dataInsert[] = [
+                'id' => (string) str()->ulid(),
+                'user_id' => $user->id,
+                'degree' => $education['degree'],
+                'institution_name' => $education['institution_name'],
+                'field_of_study' => $education['field_of_study'],
+                'start_at' => $education['start_at'],
+                'end_at' => $education['end_at'] ?? null,
+                'created_at' => now()
+            ];
+        }
+
+        UserEducation::insert($dataInsert);
     }
     
 }

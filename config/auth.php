@@ -61,7 +61,8 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            // 'driver' => 'eloquent',
+            'driver' => 'cachedEloquent', // ini ada di AppServiceProvider yang me-return class App\Auth\EloquentCachedUserProvider
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
