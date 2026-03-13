@@ -1,0 +1,68 @@
+# ==========================================
+# STAGE 1: Builder (Hanya untuk Composer)
+# ==========================================
+FROM composer:2.8 AS vendor
+
+WORKDIR /app
+
+# COPY HANYA file composer terlebih dahulu
+# Ini adalah trik "Layer Caching". Jika Anda hanya mengubah kode PHP,
+# layer ini tidak akan di-build ulang, sehingga prosesnya jauh lebih cepat.
+COPY composer.json composer.lock ./
+
+# Install dependensi. 
+# --ignore-platform-reqs penting agar composer tidak error karena 
+# ekstensi PHP belum ada di stage ini.
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --prefer-dist \
+    --ignore-platform-reqs \
+    --no-scripts \
+    --optimize-autoloader
+
+# ==========================================
+# STAGE 2: Production (Image Final)
+# ==========================================
+# Kita gunakan versi Alpine. Ukuran OS-nya hanya ~5MB!
+FROM dunglas/frankenphp:1-php8.5-alpine
+
+# Script ini otomatis mengunduh tools, mengkompilasi ekstensi,
+# lalu SECARA OTOMATIS MENGHAPUS tools kompilasi tersebut di akhir proses
+# agar image tetap kecil.
+RUN install-php-extensions \
+    curl \
+    pcntl \
+    bcmath \
+    gd \
+    intl \
+    pgsql \
+    pdo_pgsql \
+    imagick \
+    redis \
+    zip \
+    opcache
+
+# Copy custom php.ini
+COPY .docker/php/php.ini /usr/local/etc/php/conf.d/99-overrides.ini
+
+WORKDIR /app
+
+# Copy seluruh source code Anda (sudah difilter oleh .dockerignore)
+COPY . .
+
+# Copy folder /vendor yang sudah bersih dan matang dari STAGE 1
+COPY --from=vendor /app/vendor /app/vendor
+
+# Hapus cache lokal (jika masih ada yang lolos) lalu jalankan package:discover
+RUN rm -f bootstrap/cache/*.php && \
+    php artisan package:discover --ansi
+
+# Set environment
+ENV AUTOCONF_SERVER=frankenphp \
+    LARAVEL_OCTANE=1
+
+# Expose ports
+EXPOSE 3300 443 80
+
+CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=3300", "--admin-port=2019"]

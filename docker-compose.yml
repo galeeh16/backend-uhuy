@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: uhuy_frankenphp
+    ports:
+      - "3300:3300"
+    volumes:
+      - .:/app
+    env_file:
+      - .env.docker
+    # Hubungkan container app ke network eksternal
+    networks:
+      - pg_network
+      - redis_network
+
+  # --- Container Worker (Queue) ---
+  worker:
+    build:
+      context: .
+    container_name: uhuy_worker
+    # Kita timpa perintahnya untuk menjalankan worker saja
+    command: php artisan queue:work
+    depends_on:
+      - app
+    networks:
+      - pg_network
+      - redis_network
+
+# Definisikan network eksternal agar Docker tahu jaringan ini sudah ada di luar
+networks:
+  pg_network:
+    external: true
+  redis_network:
+    external: true

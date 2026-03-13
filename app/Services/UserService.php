@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserEducation;
 use App\Models\UserWorkExperience;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -336,18 +337,24 @@ class UserService
         return User::where('email', $email)->exists();
     }
 
+    public function getWorkExperiences(User $user): Collection
+    {
+        $workExperiences = $user->workExperiences()->get();
+
+        return $workExperiences;
+    }
+
     public function updateWorkExperiences(User $user, array $experiences): void
     {
-        $incomingIds = collect($experiences)->pluck('id')->filter();
         
         // Tetap hapus yang tidak dikirim dari frontend
-        $user->workExperiences()->whereNotIn('id', $incomingIds)->delete();
+        $user->workExperiences()->delete();
 
         // Siapkan data untuk Upsert
-        $dataToUpsert = [];
+        $dataInsert = [];
 
         foreach ($experiences as $experience) {
-            $dataToUpsert[] = [
+            $dataInsert[] = [
                 'id' => $experience['id'] ?? (string) str()->ulid(),
                 'user_id' => $user->id,
                 'company_name' => $experience['company'],
@@ -363,7 +370,12 @@ class UserService
         // Jika ID cocok, update kolom yang disebutkan di array kedua
         // UserWorkExperience::upsert($dataToUpsert, ['id'], ['company_name', 'position', 'start_at', 'end_at', 'description']);
     
-        UserWorkExperience::insert($dataToUpsert);
+        UserWorkExperience::insert($dataInsert);
+    }
+
+    public function getEducations(User $user): Collection
+    {
+        return $user->educations()->get();
     }
 
     public function updateEducations(User $user, array $educations): void 

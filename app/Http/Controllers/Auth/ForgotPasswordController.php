@@ -24,8 +24,8 @@ final class ForgotPasswordController extends Controller
         $status = Password::sendResetLink($request->only('email'));
     
         return $status === Password::RESET_LINK_SENT
-            ? response()->json(['message' => 'Link reset password telah dikirim ke email.'], 200)
-            : response()->json(['message' => 'Gagal mengirim email.'], 400);
+            ? response()->json(['message' => 'Password reset link has been sent to your email.'], 200)
+            : response()->json(['message' => 'Failed send reset link.'], 400);
     }
 
     /**
@@ -51,7 +51,7 @@ final class ForgotPasswordController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-            ? response()->json(['message' => 'Password berhasil diperbarui.'], 200)
-            : response()->json(['message' => 'Token atau email tidak valid.'], 400);
+            ? response()->json(['message' => 'Password updated successfully.'], 200)
+            : response()->json(['message' => 'Invalid token or email.'], 400);
     }
 }

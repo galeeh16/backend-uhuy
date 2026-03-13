@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -28,13 +29,24 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $login = $this->userService->login($validated['email'], $validated['password']);
-
-        return response()->json([
-            'message' => 'Login berhasil',
-            'token'   => $login['token'],
-            'user'    => $login['user'],
-        ]);
+        try {
+            $login = $this->userService->login($validated['email'], $validated['password']);
+            Log::info('Login Success');
+            return response()->json([
+                'message' => 'Login berhasil',
+                'token'   => $login['token'],
+                'user'    => $login['user'],
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errors' => $e->validator->errors()
+            ], 422);
+        } catch (Exception $e) {
+            $err = $this->formatError($e);
+            Log::error('Login Error', ['error' => $err]);
+            return $this->responseInternalServerError();
+        }
     }
 
     /**

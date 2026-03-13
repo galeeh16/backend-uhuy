@@ -72,6 +72,25 @@ class ProfileController extends Controller
     }
 
     /**
+     * Get work experiences talent
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function workExperiences(Request $request): JsonResponse 
+    {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        $workExperiences = $this->userService->getWorkExperiences($user);
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $workExperiences,
+        ], 200);
+    }
+
+    /**
      * Update talent work experiences
      *
      * @param Request $request
@@ -105,6 +124,25 @@ class ProfileController extends Controller
             DB::rollBack();
             $err = $this->formatError($e);
             Log::error('Update User Work Experiences Error', ['error' => $err]);
+            return $this->responseInternalServerError();
+        }
+    }
+
+    public function educations(Request $request): JsonResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        try {
+            $educations = $this->userService->getEducations($user);
+
+            return response()->json([
+                'message' => 'Success',
+                'data' => $educations
+            ], 200);
+        } catch (Exception $e) {
+            $err = $this->formatError($e);
+            Log::error('Get Education Error', ['error' => $err]);
             return $this->responseInternalServerError();
         }
     }

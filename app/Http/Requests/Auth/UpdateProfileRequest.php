@@ -23,17 +23,18 @@ class UpdateProfileRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var \App\Models\User $user */
         $user = $this->user();
 
         if ($user->role === 'TALENT') {
-             return [
+            return [
                 'location'          => 'required|string|max:255',
                 'full_address'      => 'required|string|max:255',
                 'about_me'          => 'required|string|max:255',
                 'phone'             => 'required|string|min:10,max:15',
-                'photo'             => 'required|file|mimes:png,jpg,jpeg,webp|max:5120',
-                'cv'                => 'required|file|mimes:pdf|max:5120',
-                'portfolio'         => 'required|file|mimes:pdf|max:5120',
+                'photo'             => 'nullable|file|mimes:png,jpg,jpeg,webp|max:5120',
+                'cv'                => 'nullable|file|mimes:pdf|max:5120',
+                'portfolio'         => 'nullable|file|mimes:pdf|max:5120',
                 'birth_date'        => 'required|string|date_format:Y-m-d',
                 'experience_year'   => 'required|integer|gte:0',
                 'availability_for_work' => 'required|boolean',
